@@ -1,62 +1,31 @@
 const express = require("express");
 
-const contacts = require("../../models/contacts");
+const controllers = require("../../controllers");
 
-const { RequestError } = require("../../helpers");
+const { controllerWrapper } = require("../../helpers");
+
+const { validateBody } = require("../../middlewares/index");
+
+const schemas = require("../../schemas/contact");
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
-	try {
-		const result = await contacts.listContacts();
-		res.json(result);
-	} catch (error) {
-		next(error);
-	}
-});
+router.get("/", controllerWrapper(controllers.getContacts));
 
-router.get("/:contactId", async (req, res, next) => {
-	try {
-		const { contactId } = req.params;
-		const result = await contacts.getContactById(contactId);
+router.get("/:id", controllerWrapper(controllers.getContactById));
 
-		if (!result) {
-			throw RequestError(404);
-		}
+router.post(
+	"/",
+	validateBody(schemas.addSchema),
+	controllerWrapper(controllers.addContact)
+);
 
-		res.json(result);
-	} catch (error) {
-		next(error);
-	}
-});
+router.delete("/:id", controllerWrapper(controllers.deleteContact));
 
-router.post("/", async (req, res, next) => {
-	try {
-		const result = await contacts.addContact(req.body);
-		res.status(201).json(result);
-	} catch (error) {
-		next(error);
-	}
-});
-
-router.delete("/:contactId", async (req, res, next) => {
-	try {
-		const { contactId } = req.params;
-		const result = await contacts.removeContact(contactId);
-		if (!result) {
-			throw RequestError(404, "Not found");
-		}
-		res.json({
-			message: "Contact removed",
-		});
-	} catch (error) {
-		next(error);
-	}
-});
-
-router.put("/:contactId", async (req, res, next) => {
-	const result = await contacts.updateContact();
-	res.json(result);
-});
+router.put(
+	"/:id",
+	validateBody(schemas.addSchema),
+	controllerWrapper(controllers.updateContact)
+);
 
 module.exports = router;
