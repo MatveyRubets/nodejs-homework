@@ -4,19 +4,19 @@ const controllers = require("../../controllers");
 
 const { controllerWrapper } = require("../../helpers");
 
-// const { validateBody } = require("../../middlewares/index");
+const { validateBody } = require("../../middlewares/index");
 
-// const schemas = require("../../schemas/contact");
+const { schemas } = require("../../models/contact");
 
 const router = express.Router();
 
-// router.get("/", controllerWrapper(controllers.getContacts));
+router.get("/", controllerWrapper(controllers.getContacts));
 
 // router.get("/:id", controllerWrapper(controllers.getContactById));
 
 router.post(
 	"/",
-	// validateBody(schemas.addSchema),
+	validateBody(schemas.addSchema),
 	controllerWrapper(controllers.addContact)
 );
 
