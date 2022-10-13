@@ -14,4 +14,10 @@ router.post(
 	controllerWrapper(controllerAuth.register)
 );
 
+router.post(
+        "/login",
+        validateBody(schemas.loginSchema),
+        controllerWrapper(controllerAuth.login)
+)
+
 module.exports = router;
