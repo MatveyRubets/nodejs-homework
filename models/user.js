@@ -1,23 +1,27 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 
-const { handleSaveErrors } = require("../middlewares");
+const { handleSaveErrors } = require("../helpers");
 
 const userSchema = new Schema(
 	{
-		name: {
+		password: {
 			type: String,
-			required: true,
+			required: [true, "Password is required"],
 		},
 		email: {
 			type: String,
-			required: true,
+			required: [true, "Email is required"],
 			unique: true,
 		},
-		password: {
+		subscription: {
 			type: String,
-			required: true,
-			minlength: 6,
+			enum: ["starter", "pro", "business"],
+			default: "starter",
+		},
+		token: {
+			type: String,
+			default: null,
 		},
 	},
 	{ versionKey: false, timestamps: true }
