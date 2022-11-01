@@ -39,4 +39,10 @@ router.get(
 	"/verify:verificationToken",
 	controllerWrapper(controllerAuth.verify)
 );
+
+router.post(
+	"/verify",
+	validateBody(schemas.verifyEmailSchema),
+	controllerWrapper(controllerAuth.resendEmail)
+);
 module.exports = router;
